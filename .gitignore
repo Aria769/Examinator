@@ -1,3 +1,49 @@
-"venv/" 
-"exam-assistant/venv/" 
-"exam-assistant/venv" 
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+exam-assistant/venv/
+exam-assistant/env/
+
+# Python кэш файлы
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Файлы IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Логи и базы данных
+*.log
+*.sql
+*.sqlite3
+*.db
+
+# Файлы окружения
+.env
+.env.local
+.env.*.local
+
+# Файлы сборки и дистрибуции
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Файлы тестов и покрытия
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jupyter Notebook (если используете)
+.ipynb_checkpoints/
+
+# OS файлы
+.DS_Store
+Thumbs.db

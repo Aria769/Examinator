@@ -1,37 +1,16 @@
-!apt-get update && apt-get install -y libsndfile1 ffmpeg
-!pip install Cython packaging
-#!pip install git+https://github.com/NVIDIA/NeMo.git@main#egg=nemo_toolkit[asr]
-
-# Установить через conda когда возможно
-#!conda install -c conda-forge numba cudatoolkit=11.8
-!pip install nemo_toolkit['asr']
-# !pip uninstall numba numba-cuda cuda-python -y
-# !pip install "numba<0.62.0" "numba-cuda<0.12.0" "cuda-python<13.0.0"
-# !pip install nemo_toolkit['asr'] --upgrade
-
-!pip install huggingface_hub
-#!pip install cuda-python
-
-# !pip install --upgrade pip
-!pip install git+https://github.com/openai/whisper.git
-!pip install pandas
-
-!pkill -f ollama
-
-!curl -fsSL https:/ollama.com/install.sh | sh
-!nohup ollama serve > /dev/null 2>&1 &
-!sleep 10
-
-
-!ollama pull llama3
-
-
 import os
 import whisper
 import pandas as pd
 import torch
 
 import torch, platform, sys
+
+# Очистка кэша видеопамяти
+#torch.cuda.empty_cache()
+
+# Опционально: ограничьте использование памяти
+torch.cuda.set_per_process_memory_fraction(0.8)  # использовать не более 80% памяти
+
 
 print("PyTorch: ", torch.__version__)
 print("CUDA available: ", torch.cuda.is_available())
@@ -42,13 +21,15 @@ if torch.cuda.is_available():
 else:
     print("Работаем на CPU - будет медленнее, это нормально.")
 
-model = whisper.load_model("large")
+model = whisper.load_model("medium")
 
-from google.colab import files
-uploaded = files.upload()
+video_file = "audio.mp3"
 
 result = model.transcribe(video_file, language = "ru")
 print("Транскрипция:\n", result["text"])
+
+transcribed = result["text"]
+
 
 import requests, json, re
 MODEL = "llama3"
@@ -68,7 +49,7 @@ json={
     Дай только json. В summary и examples пиши на русском.
 """
 
-prompt = f"{SYSTEM_PROMPT}\n\file_id: call10.wav\n\Транскрипт для анализа:\n{TRANSCRIPT_FULL.strip()}\nДиаризация голоса:\n{DIARIZED_FULL.strip()}"
+prompt = f"{SYSTEM_PROMPT}\n\file_id: call10.wav\n\Транскрипт для анализа:\n{transcribed.strip()}"
 
 resp = requests.post(
     "http://127.0.0.1:11434/api/generate",
