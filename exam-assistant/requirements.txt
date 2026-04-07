@@ -1,0 +1,12 @@
+# Вместо apt-get install libsndfile1, для Windows нужен pip-пакет
+soundfile>=0.10.0
+
+ffmpeg-python>=0.2.0
+Cython
+nemo_toolkit[asr]
+huggingface_hub
+git+https://github.com/openai/whisper.git
+pandas
+fastapi
+uvicorn
+python-multipart
